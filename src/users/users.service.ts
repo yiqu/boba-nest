@@ -31,4 +31,11 @@ export class UserSerivce {
   getTitle(): string {
     return "Users Service!";
   }
+
+  getUserByIndex(index: number) {
+    if (index < this.currentUsers.length) {
+      return this.currentUsers[index];
+    }
+    return undefined;
+  }
 }

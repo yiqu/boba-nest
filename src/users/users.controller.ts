@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, ClassSerializerInterceptor, Controller, Get, 
-  Logger, Post, Req, UseInterceptors } from '@nestjs/common';
+  HttpException, 
+  HttpStatus, 
+  Logger, Param, Post, Req, UseInterceptors } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
@@ -35,6 +37,27 @@ export class UsersController {
   @Get("all/count")
   addUserCount(): number {
     return this.us.getUsersCount();
+  }
+
+  @Get(":index")
+  getUserByIndex(@Param() params) {
+    this.logger.log(params)
+    
+    const enetity = this.us.getUserByIndex(params.index);
+    if (enetity) {
+      return this.us.getUserByIndex(params.index);
+    } else {
+      throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: 'Index out of bound',
+      }, HttpStatus.FORBIDDEN);
+    }
+  }
+
+
+  @Get(":index/:field")
+  getUserByIndexAndId(@Param() params) {
+    this.logger.log(params)
   }
 
   @Get("title")
