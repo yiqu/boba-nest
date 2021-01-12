@@ -7,8 +7,8 @@ import { Server } from 'socket.io';
 import { ChatPayload } from './chat.model';
 
 @WebSocketGateway({ 
-  //path: 'chat', 
-  //namespace: 'messages' 
+  path: '/websockets', // important to include the slash prefix
+  namespace: "/chat"
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   private readonly logger = new Logger(ChatGateway.name); 
@@ -20,18 +20,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   messagesToClient: ChatPayload[] = [];
 
   afterInit(server: Server) {
-    this.logger.log("gateway started!" + server)
+    this.logger.log("chat gateway started!" + server)
   }
 
   handleConnection(client: Socket){
-    this.logger.log("A connection success!: " + client.id)
+    this.logger.log("A chat connection success!: " + client.id)
     this.users++;
     this.server.emit('users', this.users);
     this.server.emit("messageToClientz", this.messagesToClient);
   }
 
   handleDisconnect(client: Socket){
-    this.logger.log("A disconnect success: " + client.id)
+    this.logger.log("A chat disconnect success: " + client.id)
     this.users--;
     this.server.emit('users', this.users);
   }
